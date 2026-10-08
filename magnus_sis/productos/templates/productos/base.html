@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Inventario · Magnus SIS{% endblock %}</title>
+</head>
+<body>
+  <header>
+    <a href="{% url 'productos:lista' %}">Magnus SIS · Inventario</a>
+    <nav aria-label="Navegación principal">
+      <a href="{% url 'productos:lista' %}">Productos</a>
+      <a href="{% url 'productos:categorias' %}">Categorías</a>
+      <a href="{% url 'admin:index' %}">Administración</a>
+    </nav>
+  </header>
+  <main>{% block content %}{% endblock %}</main>
+</body>
+</html>

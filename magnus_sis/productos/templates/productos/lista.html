@@ -1,0 +1,12 @@
+{% extends 'productos/base.html' %}
+{% block title %}Productos · Magnus SIS{% endblock %}
+{% block content %}
+  <h1>Productos</h1>
+  <p>Esqueleto inicial. El listado y la búsqueda quedan pendientes.</p>
+  <form action="{% url 'productos:buscar' %}" method="get">
+    <label for="termino">Buscar por nombre o descripción</label>
+    <input id="termino" name="q" type="search">
+    <button type="submit">Buscar</button>
+  </form>
+  <a href="{% url 'productos:crear' %}">Nuevo producto</a>
+{% endblock %}
