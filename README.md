@@ -14,6 +14,7 @@ Lenguaje de Programación 1 · 2026-2
 - Brayan Steven Sanchez
 - Sergio Neira
 - Hilver Galindo
+- Jose Gabriel Cabrera
 
 ## Repositorio
 
