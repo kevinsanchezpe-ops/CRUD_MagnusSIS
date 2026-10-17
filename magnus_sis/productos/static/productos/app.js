@@ -46,7 +46,11 @@
   function refreshStats() {
     if (byId('stat-products')) byId('stat-products').textContent = products.length;
     if (byId('stat-categories')) byId('stat-categories').textContent = categories.length;
-    if (byId('stat-low-stock')) byId('stat-low-stock').textContent = products.filter((product) => stockState(product) === 'low').length;
+    const lowStockCount = products.filter((product) => stockState(product) === 'low').length;
+    if (byId('stat-low-stock')) {
+      byId('stat-low-stock').textContent = lowStockCount;
+      byId('stat-low-stock').closest('.stat')?.classList.toggle('attention', lowStockCount > 0);
+    }
   }
 
   function renderProductList() {
@@ -73,9 +77,22 @@
 
     if (!filtered.length) {
       empty.hidden = false;
-      empty.querySelector('h2').textContent = products.length ? 'No encontramos productos' : 'Aún no hay productos';
-      empty.querySelector('p').textContent = products.length ? 'Prueba con otra búsqueda o cambia los filtros.' : 'Agrega tu primer producto para empezar a organizar el inventario.';
+      empty.querySelector('h2').textContent = products.length
+        ? 'No encontramos productos'
+        : categories.length
+          ? 'Aún no hay productos'
+          : 'Empieza por crear una categoría';
+      empty.querySelector('p').textContent = products.length
+        ? 'Prueba con otra búsqueda o cambia los filtros.'
+        : categories.length
+          ? 'Tu inventario ya tiene categorías. Registra el primer producto para empezar.'
+          : 'Crea una categoría para organizar el inventario antes de registrar productos.';
       empty.querySelector('a').hidden = products.length > 0;
+      if (!products.length) {
+        const firstAction = empty.querySelector('a');
+        firstAction.href = categories.length ? '/productos/nuevo/' : '/categorias/';
+        firstAction.textContent = categories.length ? 'Nuevo producto' : 'Crear primera categoría';
+      }
       table.hidden = true;
       pagination.hidden = true;
     } else {
@@ -85,15 +102,15 @@
       tbody.innerHTML = pageItems.map((product) => {
         const state = stockState(product);
         return `<tr>
-          <td><div class="product"><span class="thumb">▦</span><span><b>${escapeHtml(product.name)}</b><small>SKU · ${escapeHtml(product.sku || '—')}</small></span></div></td>
+          <td><div class="product"><span><b>${escapeHtml(product.name)}</b><small>SKU · ${escapeHtml(product.sku || '—')}</small></span></div></td>
           <td>${escapeHtml(categoryName(product.categoryId))}</td><td>${money(product.price)}</td><td>${Number(product.quantity)} un.</td>
           <td><span class="badge ${state}">${statusLabel(product)}</span></td>
-          <td><div class="actions"><a class="icon-btn" href="${productUrl(product.id)}" aria-label="Ver ${escapeHtml(product.name)}">◉</a><a class="icon-btn" href="${productUrl(product.id, 'editar/')}" aria-label="Editar ${escapeHtml(product.name)}">✎</a><a class="icon-btn" href="${productUrl(product.id, 'eliminar/')}" aria-label="Eliminar ${escapeHtml(product.name)}">⌫</a></div></td>
+          <td><div class="actions"><a class="table-action" href="${productUrl(product.id)}" aria-label="Ver ${escapeHtml(product.name)}">Ver</a><a class="table-action" href="${productUrl(product.id, 'editar/')}" aria-label="Editar ${escapeHtml(product.name)}">Editar</a><a class="table-action danger-text" href="${productUrl(product.id, 'eliminar/')}" aria-label="Eliminar ${escapeHtml(product.name)}">Eliminar</a></div></td>
         </tr>`;
       }).join('');
       byId('product-count').textContent = `Mostrando ${(page - 1) * PAGE_SIZE + 1}–${Math.min(page * PAGE_SIZE, filtered.length)} de ${filtered.length} productos`;
       const pageNav = byId('product-pages');
-      pageNav.innerHTML = `<button type="button" data-page="${page - 1}" ${page === 1 ? 'disabled' : ''} aria-label="Página anterior">‹</button>${Array.from({ length: pageCount }, (_, index) => `<button type="button" data-page="${index + 1}" class="${page === index + 1 ? 'chosen' : ''}" ${page === index + 1 ? 'aria-current="page"' : ''}>${index + 1}</button>`).join('')}<button type="button" data-page="${page + 1}" ${page === pageCount ? 'disabled' : ''} aria-label="Página siguiente">›</button>`;
+      pageNav.innerHTML = `<button type="button" data-page="${page - 1}" ${page === 1 ? 'disabled' : ''}>Anterior</button>${Array.from({ length: pageCount }, (_, index) => `<button type="button" data-page="${index + 1}" class="${page === index + 1 ? 'chosen' : ''}" ${page === index + 1 ? 'aria-current="page"' : ''}>${index + 1}</button>`).join('')}<button type="button" data-page="${page + 1}" ${page === pageCount ? 'disabled' : ''}>Siguiente</button>`;
       pageNav.querySelectorAll('[data-page]').forEach((button) => button.addEventListener('click', () => {
         sessionStorage.setItem('magnusSIS.productPage', String(Number(button.dataset.page)));
         renderProductList();
@@ -127,7 +144,7 @@
     const categoryField = byId('categoria');
     const product = editId ? products.find((item) => item.id === editId) : null;
     if (editId && !product) {
-      form.closest('.form-layout').innerHTML = '<div class="empty-state card"><span class="empty-icon">⌕</span><h2>Producto no encontrado</h2><p>Puede que haya sido eliminado.</p><a class="btn primary" href="/">Volver al inventario</a></div>';
+      form.closest('.form-layout').innerHTML = '<div class="empty-state card" role="status"><h2>Producto no encontrado</h2><p>Puede que haya sido eliminado.</p><a class="btn primary" href="/">Volver al inventario</a></div>';
       return;
     }
     categoryField.innerHTML = '<option value="">Selecciona una categoría</option>' + categories.map((category) => `<option value="${escapeHtml(category.id)}">${escapeHtml(category.name)}</option>`).join('');
@@ -214,10 +231,12 @@
   function showCategoryDialog(category = null) {
     const dialog = document.createElement('dialog');
     dialog.className = 'category-dialog';
+    dialog.setAttribute('aria-labelledby', 'category-dialog-title');
+    dialog.setAttribute('aria-describedby', 'category-dialog-description');
     dialog.innerHTML = `<form method="dialog" class="category-dialog-card">
-      <div class="dialog-heading"><div><h2>${category ? 'Editar categoría' : 'Nueva categoría'}</h2><p>Define el nombre y una descripción breve.</p></div><button class="dialog-close" value="cancel" formnovalidate aria-label="Cerrar">×</button></div>
-      <label class="field"><span>Nombre de la categoría <span class="required">*</span></span><input name="name" maxlength="100" required value="${escapeHtml(category?.name || '')}" placeholder="Ej. Periféricos"></label>
-      <label class="field"><span>Descripción</span><textarea name="description" maxlength="300" placeholder="Describe qué productos pertenecen aquí">${escapeHtml(category?.description || '')}</textarea></label>
+      <div class="dialog-heading"><div><h2 id="category-dialog-title">${category ? 'Editar categoría' : 'Nueva categoría'}</h2><p id="category-dialog-description">Agrupa productos con características similares.</p></div></div>
+      <label class="field"><span>Nombre de la categoría <span class="required">*</span></span><input name="name" maxlength="100" required value="${escapeHtml(category?.name || '')}" placeholder="Ej. Periféricos" aria-describedby="category-name-error"><span class="field-error" id="category-name-error" role="alert" hidden></span></label>
+      <label class="field"><span>Descripción <span class="optional">Opcional</span></span><textarea name="description" maxlength="300" placeholder="Qué tipo de productos pertenecen aquí">${escapeHtml(category?.description || '')}</textarea></label>
       <div class="form-actions"><button class="btn secondary" value="cancel" formnovalidate>Cancelar</button><button class="btn primary" value="save">${category ? 'Guardar cambios' : 'Crear categoría'}</button></div>
     </form>`;
     document.body.append(dialog);
@@ -230,8 +249,12 @@
       if (event.submitter?.value === 'cancel') { dialog.close('cancel'); return; }
       const name = form.elements.name.value.trim();
       if (!name) { form.elements.name.focus(); return; }
+      const nameError = form.querySelector('#category-name-error');
+      nameError.hidden = true;
       if (categories.some((entry) => entry.name.toLocaleLowerCase('es') === name.toLocaleLowerCase('es') && entry.id !== category?.id)) {
-        alert('Ya existe una categoría con ese nombre.');
+        nameError.textContent = 'Ya existe una categoría con ese nombre. Elige otro nombre.';
+        nameError.hidden = false;
+        form.elements.name.focus();
         return;
       }
       const nextCategory = { id: category?.id || makeId(), name, description: form.elements.description.value.trim() };
@@ -263,7 +286,7 @@
     }
     grid.innerHTML = matches.map((category) => {
       const count = products.filter((product) => product.categoryId === category.id).length;
-      return `<article class="card category-card"><div class="cat-top"><span class="cat-icon">▤</span><div class="category-actions"><button class="icon-btn" data-edit-category="${escapeHtml(category.id)}" aria-label="Editar ${escapeHtml(category.name)}">✎</button><button class="icon-btn" data-delete-category="${escapeHtml(category.id)}" aria-label="Eliminar ${escapeHtml(category.name)}">⌫</button></div></div><h3>${escapeHtml(category.name)}</h3><p>${escapeHtml(category.description || 'Sin descripción.')}</p><div class="cat-bottom"><span><b>${count}</b> ${count === 1 ? 'producto' : 'productos'}</span><a href="/?categoria=${encodeURIComponent(category.id)}">Ver productos →</a></div></article>`;
+      return `<article class="card category-card"><div class="cat-top"><span class="category-count">${count} ${count === 1 ? 'producto' : 'productos'}</span></div><h3>${escapeHtml(category.name)}</h3><p>${escapeHtml(category.description || 'Sin descripción.')}</p><div class="cat-bottom"><a class="btn secondary" href="/?categoria=${encodeURIComponent(category.id)}">Ver productos</a><div class="category-actions"><button class="btn subtle" data-edit-category="${escapeHtml(category.id)}" aria-label="Editar categoría ${escapeHtml(category.name)}">Editar</button><button class="btn danger" data-delete-category="${escapeHtml(category.id)}" aria-label="Eliminar categoría ${escapeHtml(category.name)}">Eliminar</button></div></div></article>`;
     }).join('');
     grid.querySelectorAll('[data-edit-category]').forEach((button) => button.addEventListener('click', () => {
       const category = categories.find((entry) => entry.id === button.dataset.editCategory);
@@ -291,7 +314,8 @@
     byId('sort-categories').addEventListener('click', () => {
       categories = [...categories].sort((a, b) => a.name.localeCompare(b.name, 'es') * (ascending ? 1 : -1));
       ascending = !ascending;
-      byId('sort-categories').innerHTML = `↕&nbsp; Ordenar ${ascending ? 'A–Z' : 'Z–A'}`;
+      byId('sort-categories').textContent = `Ordenar: ${ascending ? 'A–Z' : 'Z–A'}`;
+      byId('sort-categories').setAttribute('aria-label', `Ordenar categorías de ${ascending ? 'A a Z' : 'Z a A'}`);
       write(CATEGORY_KEY, categories);
       renderCategories();
     });

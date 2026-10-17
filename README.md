@@ -1,80 +1,116 @@
-# Magnus SIS · Sistema de gestión de inventario
+# Magnus SIS
 
-Proyecto académico para gestionar productos y categorías. El repositorio reúne el prototipo visual, una interfaz Django con interacciones de navegador y el esqueleto del backend.
+Sistema académico de gestión de inventario desarrollado por el equipo del curso. En esta etapa se está adelantando la interfaz frontend; el backend se encuentra en construcción y todavía no está conectado a las operaciones de la interfaz.
 
-## Estado actual
+## Estado del sistema
 
-- **Interfaz:** plantillas Django basadas en los mockups, con estilos HTML/CSS y comportamiento JavaScript. El inventario inicia vacío; las operaciones de productos y categorías se guardan en `localStorage` del navegador.
-- **Persistencia:** la interfaz de navegador todavía no usa Django ORM. Sus productos y categorías no aparecen en SQLite ni en `/admin/`; el almacenamiento también es distinto entre navegadores y equipos.
-- **Backend:** Django 6.1, app `productos`, modelos, formularios, rutas y administración registrados. Las vistas siguen siendo stubs y no realizan CRUD ni consultas.
-- **Base de datos:** SQLite configurado para desarrollo y migrado localmente. MySQL es una opción futura, aún sin conector ni configuración.
-- **Mockups:** seis pantallas de referencia estáticas en `mockups/`; sus datos y controles son ilustrativos.
-- **Documentación:** el PDF de especificación y el DOCX de planeación se conservan como entregables de la fase inicial; el árbol incluido en el PDF refleja la organización anterior del repositorio.
-
-## Reglas de negocio propuestas
-
-- Un producto requiere nombre, categoría, precio mayor que cero y cantidad igual o superior a cero.
-- Cada producto pertenece a una categoría; una categoría puede tener cero o muchos productos.
-- El backend aún no aplica las validaciones personalizadas ni las operaciones descritas.
-- El frontend calcula el estado de stock con un umbral de cinco unidades. Ese umbral no está configurado en el modelo ni en el backend.
-- SKU, contadores y paginación no forman parte del modelo Django actual.
+- **Frontend:** interfaz servida con plantillas Django y construida con HTML, CSS y JavaScript. Incluye listado y detalle de productos, formularios, categorías, búsqueda, filtros, ordenamiento y navegación por páginas. Se han ajustado los espacios, formularios, controles y acciones sobre la interfaz existente.
+- **Datos de prueba:** la interfaz inicia sin productos ni categorías precargados. Las operaciones disponibles en el navegador guardan sus datos en `localStorage`; estos quedan en el navegador y equipo donde se crean.
+- **Backend:** proyecto Django 6.1 y aplicación `productos` con estructura de modelos, formularios, rutas y administración. Las vistas aún no implementan el CRUD ni están conectadas al almacenamiento del frontend.
+- **Base de datos:** SQLite está configurada para desarrollo. Los datos de `localStorage` no se guardan en SQLite ni aparecen en el panel `/admin/`.
+- **Mockups y documentos:** los mockups se conservan en `mockups/` como material de referencia. La planeación y los entregables están organizados en `docs/planeacion/`.
 
 ## Tecnologías
 
-- Frontend: HTML5, CSS3 y JavaScript sin framework.
-- Backend: Python y Django con arquitectura MVT, Django Forms y ORM.
-- Base de datos: SQLite local; MySQL queda como trabajo futuro.
+- Interfaz: HTML5, CSS3 y JavaScript, sin framework de frontend.
+- Servidor y backend: Python y Django, con arquitectura MVT, Django Forms y ORM.
+- Base de datos local: SQLite. La conexión con MySQL queda para una etapa posterior.
 
-## Ejecutar en Windows
+## Requisitos
 
-Desde la raíz del repositorio, prepara el entorno una vez:
+- Windows y PowerShell.
+- Python instalado.
+- Dependencias del proyecto instaladas desde `requirements.txt`.
 
-```powershell
-python -m venv .venv
-.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-```
+## Iniciar el sistema en Windows
 
-Aplica migraciones y crea las tablas:
+Abre PowerShell y entra en la carpeta raíz del proyecto. Ajusta la ruta si guardaste el proyecto en otra ubicación:
 
 ```powershell
-python .\magnus_sis\manage.py migrate
+cd C:\Users\Julian\Documents\CRUD_MagnusSIS
 ```
 
-Inicia el servidor:
+### Primera ejecución o instalación de dependencias
+
+Si aún no existe el entorno virtual, créalo. Después instala las dependencias:
 
 ```powershell
-python .\magnus_sis\manage.py runserver
+py -m venv venv
+.\venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-Abre <http://127.0.0.1:8000/>. Para acceder al panel administrativo, crea un superusuario con `python .\magnus_sis\manage.py createsuperuser` y entra a <http://127.0.0.1:8000/admin/>.
+Si el entorno `venv` ya existe, no hace falta volver a crearlo. Puedes activar ese entorno en PowerShell:
 
-Si ya existe el entorno `venv/` de este equipo, se puede usar su Python directamente desde la raíz:
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+### Crear o actualizar las tablas
+
+Ejecuta las migraciones desde la raíz del repositorio:
 
 ```powershell
 .\venv\Scripts\python.exe .\magnus_sis\manage.py migrate
+```
+
+### Arrancar el servidor
+
+```powershell
 .\venv\Scripts\python.exe .\magnus_sis\manage.py runserver
 ```
 
-## Estructura
+El servidor de desarrollo corre por defecto en el **puerto 8000**. Abre estas direcciones en el navegador:
+
+- Inicio del sistema: <http://127.0.0.1:8000/>
+- Administración de Django: <http://127.0.0.1:8000/admin/>
+
+Para detener el servidor, vuelve a la terminal y presiona `Ctrl+C`.
+
+### Si el puerto 8000 está ocupado
+
+Indica otro puerto al iniciar el servidor; por ejemplo, el 8001:
+
+```powershell
+.\venv\Scripts\python.exe .\magnus_sis\manage.py runserver 8001
+```
+
+En ese caso, abre <http://127.0.0.1:8001/>.
+
+### Acceder al panel de administración
+
+El superusuario de Django ya está creado. Con el servidor iniciado, entra a <http://127.0.0.1:8000/admin/> e inicia sesión con las credenciales configuradas para ese usuario. Si en el futuro necesitas crear otro administrador, ejecuta desde la raíz:
+
+```powershell
+.\venv\Scripts\python.exe .\magnus_sis\manage.py createsuperuser
+```
+
+El panel administra los datos del backend Django; no muestra los registros guardados en `localStorage` por la interfaz.
+
+## Rutas principales
+
+- `/` — listado de productos.
+- `/productos/nuevo/` — formulario de creación.
+- `/productos/<id>/` — detalle de producto.
+- `/productos/<id>/editar/` — formulario de edición.
+- `/productos/<id>/eliminar/` — confirmación de eliminación.
+- `/categorias/` — gestión de categorías.
+- `/admin/` — administración de Django.
+
+## Estructura del proyecto
 
 ```text
 CRUD_MagnusSIS/
-├── assets/branding/              # Logotipo compartido
-├── docs/
-│   ├── especificacion/           # Documento de sistema
-│   └── planeacion/
-│       ├── entrega_0/            # Entregable de planeación
-│       ├── scripts/              # Generador del DOCX y utilidades archivadas
-│       └── revision/             # Versiones y capturas de revisión del PDF
+├── assets/branding/             # Recursos de marca
+├── docs/planeacion/             # Entregas, revisión y scripts de documentación
 ├── magnus_sis/
-│   ├── manage.py
-│   ├── magnus_sis/               # Configuración Django
-│   └── productos/                # Modelos, vistas, rutas, templates y static
-├── mockups/                      # Prototipo HTML/CSS de referencia
-├── .gitignore
-├── README.md
-└── requirements.txt
+│   ├── manage.py                # Comandos de Django
+│   ├── magnus_sis/              # Configuración y rutas del proyecto
+│   └── productos/
+│       ├── templates/productos/ # Plantillas de la interfaz
+│       └── static/productos/    # CSS y JavaScript
+├── mockups/                     # Mockups conservados como referencia
+├── requirements.txt             # Dependencias Python
+└── README.md
 ```
 
-Los directorios locales `venv/` o `.venv/`, la base SQLite y los archivos Python compilados se excluyen del control de versiones.
+Los entornos virtuales (`venv/` o `.venv/`), la base de datos SQLite local y los archivos compilados de Python se excluyen del control de versiones.
