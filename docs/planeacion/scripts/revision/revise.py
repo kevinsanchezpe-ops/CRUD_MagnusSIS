@@ -8,7 +8,7 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph,Table,TableStyle
 from reportlab.lib.utils import ImageReader
 from reportlab.lib.enums import TA_CENTER
-R=Path('.'); T=Path('tmp/pdfs'); src=PdfReader('documento_Sistema.pdf'); W,H=792,612
+R=Path(__file__).resolve().parents[4]; T=R/'docs'/'planeacion'/'revision'/'pdf'; src=PdfReader(R/'docs'/'especificacion'/'documento_Sistema.pdf'); W,H=792,612
 navy=HexColor('#0b3f91'); blue=HexColor('#1684f8'); ink=HexColor('#172b4d'); muted=HexColor('#73819a'); line=HexColor('#dce5f0'); pale=HexColor('#f3f7fc'); amber=HexColor('#fff5e5')
 st={'body':ParagraphStyle('body',fontName='Helvetica',fontSize=9.5,leading=13,textColor=ink),'small':ParagraphStyle('small',fontName='Helvetica',fontSize=8,leading=10.5,textColor=muted),'cell':ParagraphStyle('cell',fontName='Helvetica',fontSize=8,leading=10,textColor=ink),'head':ParagraphStyle('head',fontName='Helvetica-Bold',fontSize=12,leading=15,textColor=navy),'center':ParagraphStyle('center',fontName='Helvetica',fontSize=9,leading=11,textColor=ink,alignment=TA_CENTER)}
 def page(n,title=None,sub=None):
@@ -31,7 +31,7 @@ def tab(c,data,x,y,widths,heights=None):
  t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,0),HexColor('#edf4fc')),('GRID',(0,0),(-1,-1),.45,line),('VALIGN',(0,0),(-1,-1),'MIDDLE'),('LEFTPADDING',(0,0),(-1,-1),7),('RIGHTPADDING',(0,0),(-1,-1),7)])); _,h=t.wrapOn(c,sum(widths),500); t.drawOn(c,x,y-h); return h
 pages={}
 # cover
-b,c=page(1); c.drawImage(ImageReader('Logotipo corporativo Magnus SIS.png'),42,442,width=108,height=108,mask='auto',preserveAspectRatio=True); c.setFillColor(navy); c.setFont('Helvetica-Bold',11); c.drawString(164,532,'MAGNUS SIS'); c.setFillColor(ink); c.setFont('Helvetica-Bold',23); c.drawString(164,500,'Sistema Web de Gestión de Inventario'); c.setFillColor(muted); c.setFont('Helvetica',10); c.drawString(164,479,'Modelado lógico · prototipo visual · propuesta de esqueleto Django'); c.setStrokeColor(navy); c.setLineWidth(2); c.line(42,458,750,458); P(c,'INTEGRANTES',42,435,700,'head')
+b,c=page(1); c.drawImage(ImageReader(R/'assets'/'branding'/'logo.png'),42,442,width=108,height=108,mask='auto',preserveAspectRatio=True); c.setFillColor(navy); c.setFont('Helvetica-Bold',11); c.drawString(164,532,'MAGNUS SIS'); c.setFillColor(ink); c.setFont('Helvetica-Bold',23); c.drawString(164,500,'Sistema Web de Gestión de Inventario'); c.setFillColor(muted); c.setFont('Helvetica',10); c.drawString(164,479,'Modelado lógico · prototipo visual · propuesta de esqueleto Django'); c.setStrokeColor(navy); c.setLineWidth(2); c.line(42,458,750,458); P(c,'INTEGRANTES',42,435,700,'head')
 names=['Kevin Julian Sanchez Perez','Juan Jose Osorio Quitian','Luis Esteban Medina','Brayan Steven Sanchez','Sergio Neira','Hilver Galindo']
 for i,n in enumerate(names):
  x=55+(i%2)*350; y=394-(i//2)*35; c.setFillColor(blue); c.circle(x,y+2,3,fill=1,stroke=0); c.setFillColor(ink); c.setFont('Helvetica',10); c.drawString(x+12,y-2,n)

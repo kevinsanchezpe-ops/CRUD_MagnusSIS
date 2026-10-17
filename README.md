@@ -1,101 +1,80 @@
-# Sistema Web de Gestión de Inventario · Magnus SIS
+# Magnus SIS · Sistema de gestión de inventario
 
-Proyecto académico para diseñar y preparar un sistema web de inventario de productos y categorías. Incluye diagramas, un prototipo visual estático HTML/CSS y un esqueleto ejecutable en Django. Las operaciones CRUD y la lógica de negocio están pendientes.
-
-## Asignatura
-
-Lenguaje de Programación 1 · 2026-2
-
-## Integrantes
-
-- Kevin Julian Sanchez Perez
-- Juan Jose Osorio Quitian
-- Luis Esteban Medina
-- Brayan Steven Sanchez
-- Sergio Neira
-- Hilver Galindo
-- Jose Gabriel Cabrera
-
-## Repositorio
-
-[github.com/kevinsanchezpe-ops/CRUD_MagnusSIS](https://github.com/kevinsanchezpe-ops/CRUD_MagnusSIS)
+Proyecto académico para gestionar productos y categorías. El repositorio reúne el prototipo visual, una interfaz Django con interacciones de navegador y el esqueleto del backend.
 
 ## Estado actual
 
-- **Mockups:** seis pantallas estáticas en `mockups/`. Productos, categorías, precios, cantidades y estados son datos de ejemplo; los controles no ejecutan operaciones.
-- **Django:** proyecto y app `productos` creados. Incluye modelos `Categoria` y `Producto`, ModelForms, rutas, vistas stub, plantillas placeholder, administración Django, migración inicial y dos pruebas de humo.
-- **Base de datos:** SQLite configurado para desarrollo local. Los modelos están listos para migrarse.
-- **Pendiente:** lógica CRUD, consultas y búsqueda, validación de precio mayor que cero, gestión funcional de categorías, interfaz Django integrada y configuración de MySQL.
+- **Interfaz:** plantillas Django basadas en los mockups, con estilos HTML/CSS y comportamiento JavaScript. El inventario inicia vacío; las operaciones de productos y categorías se guardan en `localStorage` del navegador.
+- **Persistencia:** la interfaz de navegador todavía no usa Django ORM. Sus productos y categorías no aparecen en SQLite ni en `/admin/`; el almacenamiento también es distinto entre navegadores y equipos.
+- **Backend:** Django 6.1, app `productos`, modelos, formularios, rutas y administración registrados. Las vistas siguen siendo stubs y no realizan CRUD ni consultas.
+- **Base de datos:** SQLite configurado para desarrollo y migrado localmente. MySQL es una opción futura, aún sin conector ni configuración.
+- **Mockups:** seis pantallas de referencia estáticas en `mockups/`; sus datos y controles son ilustrativos.
+- **Documentación:** el PDF de especificación y el DOCX de planeación se conservan como entregables de la fase inicial; el árbol incluido en el PDF refleja la organización anterior del repositorio.
+
+## Reglas de negocio propuestas
+
+- Un producto requiere nombre, categoría, precio mayor que cero y cantidad igual o superior a cero.
+- Cada producto pertenece a una categoría; una categoría puede tener cero o muchos productos.
+- El backend aún no aplica las validaciones personalizadas ni las operaciones descritas.
+- El frontend calcula el estado de stock con un umbral de cinco unidades. Ese umbral no está configurado en el modelo ni en el backend.
+- SKU, contadores y paginación no forman parte del modelo Django actual.
 
 ## Tecnologías
 
-- Prototipo: HTML5 y CSS3.
-- Backend: Python y Django con arquitectura MVT.
-- Desarrollo local: SQLite mediante Django ORM.
-- Base de datos objetivo: MySQL (pendiente de configuración).
+- Frontend: HTML5, CSS3 y JavaScript sin framework.
+- Backend: Python y Django con arquitectura MVT, Django Forms y ORM.
+- Base de datos: SQLite local; MySQL queda como trabajo futuro.
 
-## Ver el prototipo
+## Ejecutar en Windows
 
-Abre `mockups/mockups-inventario.html` en un navegador. El HTML carga `mockups-inventario.css` y el logotipo de la raíz del repositorio.
-
-## Ejecutar el esqueleto Django
-
-Desde la raíz del repositorio, crea y activa un entorno virtual e instala las dependencias:
+Desde la raíz del repositorio, prepara el entorno una vez:
 
 ```powershell
 python -m venv .venv
 .venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
-Después, inicia Django:
+Aplica migraciones y crea las tablas:
 
 ```powershell
-cd magnus_sis
-python manage.py migrate
-python manage.py runserver
+python .\magnus_sis\manage.py migrate
 ```
 
-Las rutas de productos y categorías responden con plantillas placeholder; todavía no guardan, consultan ni modifican registros. Para acceder a `/admin/`, crea un usuario administrador con `python manage.py createsuperuser`.
+Inicia el servidor:
 
-## Comprobaciones
+```powershell
+python .\magnus_sis\manage.py runserver
+```
 
-El esqueleto pasa `python manage.py check` y sus dos pruebas de humo (`python manage.py test productos`).
+Abre <http://127.0.0.1:8000/>. Para acceder al panel administrativo, crea un superusuario con `python .\magnus_sis\manage.py createsuperuser` y entra a <http://127.0.0.1:8000/admin/>.
+
+Si ya existe el entorno `venv/` de este equipo, se puede usar su Python directamente desde la raíz:
+
+```powershell
+.\venv\Scripts\python.exe .\magnus_sis\manage.py migrate
+.\venv\Scripts\python.exe .\magnus_sis\manage.py runserver
+```
 
 ## Estructura
 
 ```text
 CRUD_MagnusSIS/
+├── assets/branding/              # Logotipo compartido
+├── docs/
+│   ├── especificacion/           # Documento de sistema
+│   └── planeacion/
+│       ├── entrega_0/            # Entregable de planeación
+│       ├── scripts/              # Generador del DOCX y utilidades archivadas
+│       └── revision/             # Versiones y capturas de revisión del PDF
+├── magnus_sis/
+│   ├── manage.py
+│   ├── magnus_sis/               # Configuración Django
+│   └── productos/                # Modelos, vistas, rutas, templates y static
+├── mockups/                      # Prototipo HTML/CSS de referencia
 ├── .gitignore
 ├── README.md
-├── requirements.txt
-├── documento_Sistema.pdf
-├── Logotipo corporativo Magnus SIS.png
-├── mockups/
-│   ├── mockups-inventario.html
-│   └── mockups-inventario.css
-└── magnus_sis/
-    ├── manage.py
-    ├── magnus_sis/
-    │   ├── settings.py
-    │   ├── urls.py
-    │   ├── asgi.py
-    │   └── wsgi.py
-    └── productos/
-        ├── admin.py
-        ├── apps.py
-        ├── forms.py
-        ├── models.py
-        ├── tests.py
-        ├── urls.py
-        ├── views.py
-        ├── migrations/
-        │   └── 0001_initial.py
-        └── templates/productos/
-            ├── base.html
-            ├── categorias.html
-            ├── confirmar_eliminar.html
-            ├── detalle.html
-            ├── form.html
-            └── lista.html
+└── requirements.txt
 ```
+
+Los directorios locales `venv/` o `.venv/`, la base SQLite y los archivos Python compilados se excluyen del control de versiones.

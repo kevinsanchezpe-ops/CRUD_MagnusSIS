@@ -9,6 +9,8 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import Paragraph, Table, TableStyle
 from reportlab.lib.utils import simpleSplit
 
+ROOT=Path(__file__).resolve().parents[4]
+REVISION=ROOT/'docs'/'planeacion'/'revision'/'pdf'
 W,H=792,612; NAVY=HexColor('#0b3f91'); INK=HexColor('#172b4d'); MUTED=HexColor('#73819a'); LINE=HexColor('#dce5f0'); PALE=HexColor('#f3f7fc'); AMBER=HexColor('#fff5e5')
 styles={'body':ParagraphStyle('body',fontName='Helvetica',fontSize=9,leading=12,textColor=INK),'small':ParagraphStyle('small',fontName='Helvetica',fontSize=7.8,leading=10,textColor=MUTED),'cell':ParagraphStyle('cell',fontName='Helvetica',fontSize=7.8,leading=9.5,textColor=INK),'code':ParagraphStyle('code',fontName='Courier',fontSize=7.3,leading=9,textColor=INK),'h':ParagraphStyle('h',fontName='Helvetica-Bold',fontSize=11,leading=14,textColor=NAVY)}
 def makepage(n,title,sub=None):
@@ -142,11 +144,11 @@ para(c,'<b>Repositorio:</b>',42,340,708)
 c.setFillColor(NAVY); c.setFont('Helvetica',10); c.drawString(42,310,url); c.setStrokeColor(NAVY); c.line(42,308,42+c.stringWidth(url,'Helvetica',10),308)
 note(c,'Verificación local: `python manage.py check` y `python manage.py test productos` completan sin errores.',42,205,708,52); repl[16]=done(b,c)
 # Compose preserving untouched pages, and make repository URL clickable.
-r=PdfReader('documento_Sistema.pdf'); w=PdfWriter()
+r=PdfReader(ROOT/'docs'/'especificacion'/'documento_Sistema.pdf'); w=PdfWriter()
 for i,p in enumerate(r.pages):
  if i in repl: w.add_page(repl[i])
  else: w.add_page(p)
-out=Path('tmp/pdfs/documento_Sistema_actualizado.pdf')
+out=REVISION/'documento_Sistema_actualizado.pdf'
 with out.open('wb') as f:w.write(f)
 # Add clickable URI to final page.
 r=PdfReader(out); pg=r.pages[-1]

@@ -1,3 +1,9 @@
 {% extends 'productos/base.html' %}
 {% block title %}Categorías · Magnus SIS{% endblock %}
-{% block content %}<h1>Categorías</h1><p>El listado y la gestión de categorías están pendientes de implementar.</p>{% endblock %}
+{% block content %}
+<div class="crumb">Inicio&nbsp; / &nbsp;Categorías</div>
+<div class="heading"><div><h1>Categorías</h1><p>Organiza los productos por tipo para encontrarlos fácilmente.</p></div><button class="btn primary" id="new-category" type="button">＋&nbsp; Nueva categoría</button></div>
+<div class="toolbar"><label class="search"><span aria-hidden="true">⌕</span><input id="category-search" type="search" placeholder="Buscar una categoría…"><button class="search-submit" id="category-search-submit" type="button" aria-label="Buscar">↵</button></label><button class="btn secondary" id="sort-categories" type="button">↕&nbsp; Ordenar A–Z</button></div>
+<section class="category-grid" id="category-grid" aria-label="Categorías de productos"></section>
+<div class="empty-state card" id="category-empty"><span class="empty-icon">▤</span><h2>Aún no hay categorías</h2><p>Crea una categoría para clasificar tus productos.</p><button class="btn primary" id="empty-new-category" type="button">＋&nbsp; Nueva categoría</button></div>
+{% endblock %}

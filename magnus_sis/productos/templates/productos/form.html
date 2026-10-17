@@ -1,3 +1,16 @@
 {% extends 'productos/base.html' %}
-{% block title %}Producto · Magnus SIS{% endblock %}
-{% block content %}<h1>Formulario de producto</h1><p>Formulario y validaciones pendientes de implementar.</p>{% endblock %}
+{% block title %}{% if request.path|slice:'-7:' == 'editar/' %}Editar{% else %}Nuevo{% endif %} producto · Magnus SIS{% endblock %}
+{% block content %}
+<div class="crumb"><a href="{% url 'productos:lista' %}">Productos</a>&nbsp; / &nbsp;{% if request.path|slice:'-7:' == 'editar/' %}Editar producto{% else %}Nuevo producto{% endif %}</div>
+<div class="heading"><div><h1>{% if request.path|slice:'-7:' == 'editar/' %}Editar producto{% else %}Registrar producto{% endif %}</h1><p>{% if request.path|slice:'-7:' == 'editar/' %}Actualiza los datos del producto seleccionado.{% else %}Completa la información para agregar un producto al inventario.{% endif %}</p></div></div>
+<div class="form-layout"><section class="card form-card"><form id="product-form" action="#" method="post">
+  <div class="form-grid">
+    <div class="field full"><label for="nombre">Nombre del producto <span class="required">*</span></label><input id="nombre" name="nombre" placeholder="Ej. Teclado USB" value="{% if request.path|slice:'-7:' == 'editar/' %}Teclado USB{% endif %}" required><span class="hint">Usa un nombre fácil de identificar.</span></div>
+    <div class="field"><label for="categoria">Categoría <span class="required">*</span></label><select id="categoria" name="categoria" required><option value="">Selecciona una categoría</option></select><a class="hint category-shortcut" href="{% url 'productos:categorias' %}">¿No hay categorías? Crear una</a></div>
+    <div class="field"><label for="precio">Precio (COP) <span class="required">*</span></label><input id="precio" name="precio" type="number" min="1" step="1" placeholder="Ej. 45000" value="{% if request.path|slice:'-7:' == 'editar/' %}45000{% endif %}" required></div>
+    <div class="field"><label for="cantidad">Cantidad disponible <span class="required">*</span></label><input id="cantidad" name="cantidad" type="number" min="0" value="{% if request.path|slice:'-7:' == 'editar/' %}20{% else %}0{% endif %}" required><span class="hint">La cantidad debe ser igual o mayor a cero.</span></div>
+    <div class="field full"><label for="descripcion">Descripción</label><textarea id="descripcion" name="descripcion" placeholder="Agrega detalles útiles sobre el producto…">{% if request.path|slice:'-7:' == 'editar/' %}Teclado estándar con conexión USB.{% endif %}</textarea></div>
+  </div>
+  <div class="form-actions"><a class="btn secondary" href="{% url 'productos:lista' %}">Cancelar</a><button class="btn primary" type="submit">{% if request.path|slice:'-7:' == 'editar/' %}Guardar cambios{% else %}Guardar producto{% endif %}</button></div>
+</form></section><aside class="card preview-side"><h3>Vista previa</h3><div class="preview-box"><div class="preview-art">⌨</div><b>Teclado USB</b><small>Periféricos</small></div><div class="form-note" style="margin-top:12px"><b>Campos obligatorios</b><br>Nombre, categoría, precio y cantidad.<br><br>El precio debe ser mayor que cero.</div></aside></div>
+{% endblock %}

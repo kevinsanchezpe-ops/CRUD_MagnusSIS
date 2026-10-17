@@ -31,8 +31,8 @@ c.setStrokeColor(ink); c.setLineWidth(.8); c.line(285,310,430,310); c.setFillCol
 wrapped('Figura 4. Clases Categoria y Producto con atributos tipados (-), métodos (+) y cardinalidad 1 a 0..*.',40,137,710,7.5,9)
 wrapped('Relación: una categoría tiene cero o muchos productos; cada producto pertenece a una sola categoría. El modelo es simple y no requiere herencia ni composición. Los métodos se muestran como stubs propuestos, en coherencia con el apartado 3.3.',40,119,710,7.5,9)
 c.setStrokeColor(HexColor('#cccccc')); c.line(40,33,752,33); c.setFillColor(muted); c.setFont('Helvetica',7); c.drawString(40,20,'Sistema Web de Gestión de Inventario'); c.drawRightString(752,20,'Página 6'); c.save(); b.seek(0); pg=PdfReader(b).pages[0]
-r=PdfReader('documento_Sistema.pdf'); w=PdfWriter()
+r=PdfReader(Path(__file__).resolve().parents[4] / 'docs' / 'especificacion' / 'documento_Sistema.pdf'); w=PdfWriter()
 for i,p in enumerate(r.pages): w.add_page(pg if i==5 else p)
-out=Path('tmp/pdfs/documento_Sistema_diseno_original.pdf')
+out=Path(__file__).resolve().parents[4] / 'docs' / 'planeacion' / 'revision' / 'pdf' / 'documento_Sistema_diseno_original.pdf'
 with out.open('wb') as f:w.write(f)
 

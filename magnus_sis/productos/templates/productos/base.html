@@ -1,19 +1,36 @@
+{% load static %}
 <!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b3f91">
   <title>{% block title %}Inventario · Magnus SIS{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'productos/mockups-inventario.css' %}">
+  <script src="{% static 'productos/app.js' %}" defer></script>
 </head>
-<body>
-  <header>
-    <a href="{% url 'productos:lista' %}">Magnus SIS · Inventario</a>
-    <nav aria-label="Navegación principal">
-      <a href="{% url 'productos:lista' %}">Productos</a>
-      <a href="{% url 'productos:categorias' %}">Categorías</a>
-      <a href="{% url 'admin:index' %}">Administración</a>
-    </nav>
-  </header>
-  <main>{% block content %}{% endblock %}</main>
+<body class="app-page">
+  <div class="app">
+    <aside class="sidebar">
+      <a class="side-brand" href="{% url 'productos:lista' %}">
+        <img src="{% static 'branding/logo.png' %}" alt="">
+        <span><b>Magnus SIS</b><small>INVENTARIO</small></span>
+      </a>
+      <div class="nav-caption">MENÚ PRINCIPAL</div>
+      <a class="nav-item {% if request.path == '/' %}active{% endif %}" href="{% url 'productos:lista' %}"><span class="ico">▦</span><span class="nav-text">Productos</span></a>
+      <a class="nav-item {% if request.path == '/categorias/' %}active{% endif %}" href="{% url 'productos:categorias' %}"><span class="ico">▤</span><span class="nav-text">Categorías</span></a>
+      <div class="nav-caption system-caption">SISTEMA</div>
+      <a class="nav-item" href="{% url 'admin:index' %}"><span class="ico">⚙</span><span class="nav-text">Administración</span></a>
+      <div class="side-foot">Sesión iniciada
+        <div class="user-badge"><span class="avatar">AM</span><span><b>Admin Magnus</b><br><small>Administrador</small></span></div>
+      </div>
+    </aside>
+    <div class="main">
+      <div class="topbar"><span class="system-status"><span class="dot"></span> Sistema operativo</span><span class="language">ES</span><span class="avatar">AM</span></div>
+      <main class="content">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
 </body>
 </html>

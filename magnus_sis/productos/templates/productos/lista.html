@@ -1,12 +1,16 @@
 {% extends 'productos/base.html' %}
 {% block title %}Productos · Magnus SIS{% endblock %}
 {% block content %}
-  <h1>Productos</h1>
-  <p>Esqueleto inicial. El listado y la búsqueda quedan pendientes.</p>
-  <form action="{% url 'productos:buscar' %}" method="get">
-    <label for="termino">Buscar por nombre o descripción</label>
-    <input id="termino" name="q" type="search">
-    <button type="submit">Buscar</button>
-  </form>
-  <a href="{% url 'productos:crear' %}">Nuevo producto</a>
+<div class="crumb">Inicio&nbsp; / &nbsp;Productos</div>
+<div class="heading"><div><h1>Productos</h1><p>Consulta y administra los productos de tu inventario.</p></div><a class="btn primary" href="{% url 'productos:crear' %}">＋&nbsp; Nuevo producto</a></div>
+<div class="stat-grid">
+  <article class="card stat"><span class="mark">▦</span><span class="label">Productos registrados</span><strong id="stat-products">0</strong><small>En todas las categorías</small></article>
+  <article class="card stat"><span class="mark">▤</span><span class="label">Categorías</span><strong id="stat-categories">0</strong><small>Clasificaciones activas</small></article>
+  <article class="card stat"><span class="mark">◉</span><span class="label">Stock bajo</span><strong id="stat-low-stock">0</strong><small>Productos por revisar</small></article>
+</div>
+<form class="toolbar" action="{% url 'productos:buscar' %}" method="get">
+  <label class="search"><span aria-hidden="true">⌕</span><input name="q" type="search" placeholder="Buscar por nombre o descripción…"><button class="search-submit" type="submit" aria-label="Buscar">↵</button></label>
+  <div class="filters"><select class="select-mini" id="filter-category" aria-label="Filtrar por categoría"><option value="">Todas las categorías</option></select><select class="select-mini" id="filter-stock" aria-label="Filtrar por estado"><option value="">Estado del stock</option><option value="ok">Disponible</option><option value="low">Stock bajo</option><option value="out">Agotado</option></select></div>
+</form>
+<section class="card table-wrap" aria-label="Listado de productos"><div class="empty-state" id="product-empty"><span class="empty-icon">▦</span><h2>Aún no hay productos</h2><p>Agrega tu primer producto para empezar a organizar el inventario.</p><a class="btn primary" href="{% url 'productos:crear' %}">＋&nbsp; Nuevo producto</a></div><table class="table" id="products-table" hidden><thead><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Existencias</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="product-rows"></tbody></table><div class="pagination" id="product-pagination" hidden><span id="product-count"></span><nav class="pages" aria-label="Paginación" id="product-pages"></nav></div></section>
 {% endblock %}
