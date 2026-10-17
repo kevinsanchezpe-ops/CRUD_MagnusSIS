@@ -2,9 +2,21 @@
 
 Sistema académico de gestión de inventario desarrollado por el equipo del curso. En esta etapa se está adelantando la interfaz frontend; el backend se encuentra en construcción y todavía no está conectado a las operaciones de la interfaz.
 
+## Inicio rápido
+
+En PowerShell, desde cualquier carpeta, ejecuta:
+
+```powershell
+cd C:\Users\Julian\Documents\CRUD_MagnusSIS
+.\venv\Scripts\python.exe .\magnus_sis\manage.py runserver
+```
+
+Abre <http://127.0.0.1:8000/>. Para detener el servidor, presiona `Ctrl+C` en la terminal. Si es la primera ejecución, sigue primero los pasos de instalación y migración de la sección [Iniciar el sistema en Windows](#iniciar-el-sistema-en-windows).
+
 ## Estado del sistema
 
 - **Frontend:** interfaz servida con plantillas Django y construida con HTML, CSS y JavaScript. Incluye listado y detalle de productos, formularios, categorías, búsqueda, filtros, ordenamiento y navegación por páginas. Se han ajustado los espacios, formularios, controles y acciones sobre la interfaz existente.
+- **Tailwind CSS:** instalado como herramienta de desarrollo (v4) con compilación local a los estáticos de Django. Queda listo para adoptar sus utilidades gradualmente; los estilos actuales siguen en uso.
 - **Datos de prueba:** la interfaz inicia sin productos ni categorías precargados. Las operaciones disponibles en el navegador guardan sus datos en `localStorage`; estos quedan en el navegador y equipo donde se crean.
 - **Backend:** proyecto Django 6.1 y aplicación `productos` con estructura de modelos, formularios, rutas y administración. Las vistas aún no implementan el CRUD ni están conectadas al almacenamiento del frontend.
 - **Base de datos:** SQLite está configurada para desarrollo. Los datos de `localStorage` no se guardan en SQLite ni aparecen en el panel `/admin/`.
@@ -12,7 +24,7 @@ Sistema académico de gestión de inventario desarrollado por el equipo del curs
 
 ## Tecnologías
 
-- Interfaz: HTML5, CSS3 y JavaScript, sin framework de frontend.
+- Interfaz: HTML5, CSS3 y JavaScript; Tailwind CSS 4 está instalado como framework de utilidades, sin framework JavaScript de frontend.
 - Servidor y backend: Python y Django, con arquitectura MVT, Django Forms y ORM.
 - Base de datos local: SQLite. La conexión con MySQL queda para una etapa posterior.
 
@@ -20,6 +32,7 @@ Sistema académico de gestión de inventario desarrollado por el equipo del curs
 
 - Windows y PowerShell.
 - Python instalado.
+- Node.js y npm, para compilar Tailwind CSS.
 - Dependencias del proyecto instaladas desde `requirements.txt`.
 
 ## Iniciar el sistema en Windows
@@ -45,6 +58,13 @@ Si el entorno `venv` ya existe, no hace falta volver a crearlo. Puedes activar e
 .\venv\Scripts\Activate.ps1
 ```
 
+Instala las dependencias de frontend y genera la hoja de estilos de Tailwind:
+
+```powershell
+npm install
+npm run css:build
+```
+
 ### Crear o actualizar las tablas
 
 Ejecuta las migraciones desde la raíz del repositorio:
@@ -65,6 +85,14 @@ El servidor de desarrollo corre por defecto en el **puerto 8000**. Abre estas di
 - Administración de Django: <http://127.0.0.1:8000/admin/>
 
 Para detener el servidor, vuelve a la terminal y presiona `Ctrl+C`.
+
+Mientras desarrollas estilos con Tailwind, puedes dejar la compilación en modo observación en una terminal y ejecutar Django en otra:
+
+```powershell
+npm run css:watch
+```
+
+La hoja compilada se guarda en `magnus_sis/productos/static/productos/tailwind.generated.css`. El diseño actual sigue usando su CSS existente; Tailwind queda instalado para incorporar utilidades gradualmente.
 
 ### Si el puerto 8000 está ocupado
 
@@ -102,13 +130,15 @@ El panel administra los datos del backend Django; no muestra los registros guard
 CRUD_MagnusSIS/
 ├── assets/branding/             # Recursos de marca
 ├── docs/planeacion/             # Entregas, revisión y scripts de documentación
+├── frontend/tailwind.css        # Entrada de estilos Tailwind
 ├── magnus_sis/
 │   ├── manage.py                # Comandos de Django
 │   ├── magnus_sis/              # Configuración y rutas del proyecto
 │   └── productos/
 │       ├── templates/productos/ # Plantillas de la interfaz
-│       └── static/productos/    # CSS y JavaScript
+│       └── static/productos/    # CSS, JavaScript y CSS compilado de Tailwind
 ├── mockups/                     # Mockups conservados como referencia
+├── package.json                 # Dependencias y comandos de Tailwind
 ├── requirements.txt             # Dependencias Python
 └── README.md
 ```

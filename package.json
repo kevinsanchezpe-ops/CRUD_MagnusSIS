@@ -1,0 +1,28 @@
+{
+  "name": "crud_magnussis",
+  "version": "1.0.0",
+  "description": "Sistema académico de gestión de inventario desarrollado por el equipo del curso. En esta etapa se está adelantando la interfaz frontend; el backend se encuentra en construcción y todavía no está conectado a las operaciones de la interfaz.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "css:build": "tailwindcss -i ./frontend/tailwind.css -o ./magnus_sis/productos/static/productos/tailwind.generated.css --minify",
+    "css:watch": "tailwindcss -i ./frontend/tailwind.css -o ./magnus_sis/productos/static/productos/tailwind.generated.css --watch --poll=1000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevinsanchezpe-ops/CRUD_MagnusSIS.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kevinsanchezpe-ops/CRUD_MagnusSIS/issues"
+  },
+  "homepage": "https://github.com/kevinsanchezpe-ops/CRUD_MagnusSIS#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}

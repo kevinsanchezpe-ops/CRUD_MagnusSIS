@@ -1,0 +1,6 @@
+@layer theme, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none) important;
+
+@source "../magnus_sis/productos/templates";
+@source "../magnus_sis/productos/static/productos";
