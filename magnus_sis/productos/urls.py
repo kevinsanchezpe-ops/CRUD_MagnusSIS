@@ -1,4 +1,4 @@
-"""Rutas de la app de inventario; las vistas todavía son stubs."""
+"""Rutas de la app de inventario."""
 
 from django.urls import path
 
@@ -14,4 +14,7 @@ urlpatterns = [
     path('productos/<int:pk>/editar/', views.editar_producto, name='editar'),
     path('productos/<int:pk>/eliminar/', views.eliminar_producto, name='eliminar'),
     path('categorias/', views.lista_categorias, name='categorias'),
+    path('categorias/nueva/', views.crear_categoria, name='categoria_crear'),
+    path('categorias/<int:pk>/editar/', views.editar_categoria, name='categoria_editar'),
+    path('categorias/<int:pk>/eliminar/', views.eliminar_categoria, name='categoria_eliminar'),
 ]

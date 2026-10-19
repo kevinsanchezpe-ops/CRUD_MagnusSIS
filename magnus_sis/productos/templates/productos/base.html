@@ -9,6 +9,15 @@
   <link rel="stylesheet" href="{% static 'productos/tailwind.generated.css' %}">
   <link rel="stylesheet" href="{% static 'productos/mockups-inventario.css' %}">
   <script src="{% static 'productos/app.js' %}" defer></script>
+  <style>
+    .messages{margin-bottom:16px}
+    .message{margin:0 0 8px;padding:11px 14px;border-radius:8px;font-size:13px;border:1px solid #cfe1fa;background:#edf5ff;color:#164b89}
+    .message.success{background:#eaf7f1;border-color:#bfe5d2;color:#18704f}
+    .message.error{background:#fff0f0;border-color:#f0d5d6;color:#a22b32}
+    .message.warning{background:#fff5e5;border-color:#f3dfb8;color:#8a5a0d}
+    .inline-form{display:inline;margin:0}
+    .inline-form button{font:inherit;cursor:pointer}
+  </style>
 </head>
 <body class="app-page">
   <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
@@ -23,11 +32,16 @@
         <a class="nav-item {% if request.path == '/categorias/' %}active{% endif %}" href="{% url 'productos:categorias' %}" {% if request.path == '/categorias/' %}aria-current="page"{% endif %}><span class="nav-text">Categorías</span></a>
         <a class="nav-item admin-nav-item" href="{% url 'admin:index' %}"><span class="nav-text">Administración Django</span></a>
       </nav>
-      <p class="side-foot">Prototipo sin conexión al backend</p>
+      <p class="side-foot">Conectado al backend Django</p>
     </aside>
     <div class="main">
-      <div class="topbar"><span class="system-status">Datos guardados en este navegador</span></div>
+      <div class="topbar"><span class="system-status">Datos guardados en la base de datos</span></div>
       <main class="content" id="main-content" tabindex="-1">
+        {% if messages %}
+        <div class="messages" role="status" aria-live="polite">
+          {% for message in messages %}<p class="message {{ message.tags }}">{{ message }}</p>{% endfor %}
+        </div>
+        {% endif %}
         {% block content %}{% endblock %}
       </main>
     </div>

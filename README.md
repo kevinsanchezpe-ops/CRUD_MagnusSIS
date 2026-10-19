@@ -1,6 +1,6 @@
 # Magnus SIS
 
-Sistema académico de gestión de inventario desarrollado por el equipo del curso. En esta etapa se está adelantando la interfaz frontend; el backend se encuentra en construcción y todavía no está conectado a las operaciones de la interfaz.
+Sistema académico de gestión de inventario desarrollado por el equipo del curso. La interfaz está conectada al backend Django: los productos y las categorías se crean, consultan, editan y eliminan sobre una base de datos SQLite local.
 
 ## Inicio rápido
 
@@ -15,11 +15,11 @@ Abre <http://127.0.0.1:8000/>. Para detener el servidor, presiona `Ctrl+C` en la
 
 ## Estado del sistema
 
-- **Frontend:** interfaz servida con plantillas Django y construida con HTML, CSS y JavaScript. Incluye listado y detalle de productos, formularios, categorías, búsqueda, filtros, ordenamiento y navegación por páginas. Se han ajustado los espacios, formularios, controles y acciones sobre la interfaz existente.
+- **Frontend:** interfaz servida con plantillas Django y construida con HTML, CSS y JavaScript. Incluye listado y detalle de productos, formularios, categorías, búsqueda, filtros por categoría y existencias, y paginación. Los datos se muestran desde la base de datos; el JavaScript solo aplica los filtros y confirma las eliminaciones.
 - **Tailwind CSS:** instalado como herramienta de desarrollo (v4) con compilación local a los estáticos de Django. Queda listo para adoptar sus utilidades gradualmente; los estilos actuales siguen en uso.
-- **Datos de prueba:** la interfaz inicia sin productos ni categorías precargados. Las operaciones disponibles en el navegador guardan sus datos en `localStorage`; estos quedan en el navegador y equipo donde se crean.
-- **Backend:** proyecto Django 6.1 y aplicación `productos` con estructura de modelos, formularios, rutas y administración. Las vistas aún no implementan el CRUD ni están conectadas al almacenamiento del frontend.
-- **Base de datos:** SQLite está configurada para desarrollo. Los datos de `localStorage` no se guardan en SQLite ni aparecen en el panel `/admin/`.
+- **Backend:** proyecto Django 6.1 y aplicación `productos` con CRUD completo de productos y categorías mediante el ORM, formularios con validaciones (nombre obligatorio, precio mayor que cero, cantidad no negativa, nombre de categoría único), mensajes de confirmación y administración en `/admin/`.
+- **Base de datos:** SQLite configurada para desarrollo (`magnus_sis/db.sqlite3`, excluida del control de versiones). Los datos que se crean en la interfaz aparecen también en el panel `/admin/`.
+- **Pruebas:** el repositorio incluye pruebas automáticas del CRUD, la búsqueda, los filtros y las validaciones (`python manage.py test`).
 - **Mockups y documentos:** los mockups se conservan en `mockups/` como material de referencia. La planeación y los entregables están organizados en `docs/planeacion/`.
 
 ## Tecnologías
@@ -67,7 +67,7 @@ npm run css:build
 
 ### Crear o actualizar las tablas
 
-Ejecuta las migraciones desde la raíz del repositorio:
+Ejecuta las migraciones desde la raíz del repositorio. Esto crea el archivo `db.sqlite3` la primera vez:
 
 ```powershell
 .\venv\Scripts\python.exe .\magnus_sis\manage.py migrate
@@ -106,13 +106,19 @@ En ese caso, abre <http://127.0.0.1:8001/>.
 
 ### Acceder al panel de administración
 
-El superusuario de Django ya está creado. Con el servidor iniciado, entra a <http://127.0.0.1:8000/admin/> e inicia sesión con las credenciales configuradas para ese usuario. Si en el futuro necesitas crear otro administrador, ejecuta desde la raíz:
+La base de datos no se sube al repositorio, así que cada integrante crea su propio superusuario después de aplicar las migraciones. Ejecuta desde la raíz:
 
 ```powershell
 .\venv\Scripts\python.exe .\magnus_sis\manage.py createsuperuser
 ```
 
-El panel administra los datos del backend Django; no muestra los registros guardados en `localStorage` por la interfaz.
+Escribe el nombre de usuario, el correo (opcional) y la contraseña. La contraseña no se muestra mientras la escribes. Después, con el servidor iniciado, entra a <http://127.0.0.1:8000/admin/>. El panel administra las mismas categorías y productos que muestra la interfaz.
+
+### Ejecutar las pruebas
+
+```powershell
+.\venv\Scripts\python.exe .\magnus_sis\manage.py test
+```
 
 ## Rutas principales
 
@@ -121,7 +127,10 @@ El panel administra los datos del backend Django; no muestra los registros guard
 - `/productos/<id>/` — detalle de producto.
 - `/productos/<id>/editar/` — formulario de edición.
 - `/productos/<id>/eliminar/` — confirmación de eliminación.
-- `/categorias/` — gestión de categorías.
+- `/categorias/` — listado, búsqueda y orden de categorías.
+- `/categorias/nueva/` — formulario de creación de categoría.
+- `/categorias/<id>/editar/` — formulario de edición de categoría.
+- `/categorias/<id>/eliminar/` — eliminación de categoría (solo por POST, y solo si no tiene productos).
 - `/admin/` — administración de Django.
 
 ## Estructura del proyecto
@@ -135,6 +144,11 @@ CRUD_MagnusSIS/
 │   ├── manage.py                # Comandos de Django
 │   ├── magnus_sis/              # Configuración y rutas del proyecto
 │   └── productos/
+│       ├── models.py            # Categoria y Producto
+│       ├── forms.py             # Formularios y validaciones
+│       ├── views.py             # Vistas del CRUD
+│       ├── urls.py              # Rutas de la app
+│       ├── tests.py             # Pruebas automáticas
 │       ├── templates/productos/ # Plantillas de la interfaz
 │       └── static/productos/    # CSS, JavaScript y CSS compilado de Tailwind
 ├── mockups/                     # Mockups conservados como referencia

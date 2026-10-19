@@ -1,7 +1,7 @@
 {
   "name": "crud_magnussis",
   "version": "1.0.0",
-  "description": "Sistema académico de gestión de inventario desarrollado por el equipo del curso. En esta etapa se está adelantando la interfaz frontend; el backend se encuentra en construcción y todavía no está conectado a las operaciones de la interfaz.",
+  "description": "Sistema académico de gestión de inventario desarrollado por el equipo del curso. Interfaz Django conectada a una base de datos SQLite local con CRUD de productos y categorías.",
   "main": "index.js",
   "directories": {
     "doc": "docs"

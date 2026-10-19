@@ -1,6 +1,8 @@
-"""Modelos iniciales del inventario; las operaciones de negocio quedan pendientes."""
+"""Modelos del inventario de Magnus SIS."""
 
 from django.db import models
+
+STOCK_BAJO = 5
 
 
 class Categoria(models.Model):
@@ -11,16 +13,16 @@ class Categoria(models.Model):
         return self.nombre
 
     def crear(self) -> None:
-        pass
+        self.save()
 
     def actualizar(self) -> None:
-        pass
+        self.save()
 
     def eliminar(self) -> None:
-        pass
+        self.delete()
 
     def obtener_productos(self) -> list:
-        return []
+        return list(self.productos.all())
 
 
 class Producto(models.Model):
@@ -37,18 +39,52 @@ class Producto(models.Model):
     def __str__(self) -> str:
         return self.nombre
 
+    # --- Datos derivados que usa la interfaz ---
+    @property
+    def sku(self) -> str:
+        return f'PRD-{self.pk:04d}' if self.pk else '—'
+
+    @property
+    def estado(self) -> str:
+        if self.cantidad <= 0:
+            return 'out'
+        if self.cantidad <= STOCK_BAJO:
+            return 'low'
+        return 'ok'
+
+    @property
+    def estado_etiqueta(self) -> str:
+        return {'ok': 'Disponible', 'low': 'Stock bajo', 'out': 'Agotado'}[self.estado]
+
+    @property
+    def porcentaje_stock(self) -> int:
+        return min(100, max(0, self.cantidad * 5))
+
+    # --- Operaciones de negocio ---
     def crear(self) -> None:
-        pass
+        self.save()
 
     def actualizar(self) -> None:
-        pass
+        self.save()
 
     def eliminar(self) -> None:
-        pass
+        self.delete()
 
     def validar_datos(self) -> bool:
-        return False
+        return bool(
+            self.nombre.strip()
+            and self.categoria_id
+            and self.precio is not None and self.precio > 0
+            and self.cantidad >= 0
+        )
 
     @staticmethod
     def buscar(termino: str) -> list:
-        return []
+        termino = (termino or '').strip()
+        consulta = Producto.objects.select_related('categoria').order_by('-fecha_creacion', '-id')
+        if termino:
+            consulta = consulta.filter(
+                models.Q(nombre__icontains=termino)
+                | models.Q(descripcion__icontains=termino)
+            )
+        return list(consulta)
