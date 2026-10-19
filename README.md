@@ -1,49 +1,54 @@
 # Magnus SIS
 
-Sistema académico de gestión de inventario desarrollado por el equipo del curso. La interfaz está conectada al backend Django: los productos y las categorías se crean, consultan, editan y eliminan sobre una base de datos SQLite local.
+Sistema académico de gestión de inventario desarrollado por el equipo del curso. El repositorio contiene el MVP de consola solicitado para la entrega 2 y, aparte, un prototipo web en Django que el equipo adelantó.
 
-## Inicio rápido
+## Entrega 2: MVP por consola
 
-En PowerShell, desde cualquier carpeta, ejecuta:
+La guía del profesor para esta entrega pide un programa interactivo por consola que use una estructura en memoria. **Este MVP no usa Django ni una base de datos**: los productos se pierden al cerrar el programa.
+
+Desde PowerShell, estando en la raíz del proyecto, ejecútalo con Python:
 
 ```powershell
-cd C:\Users\Julian\Documents\CRUD_MagnusSIS
-.\venv\Scripts\python.exe .\magnus_sis\manage.py runserver
+py .\backend_consola\inventario.py
 ```
 
-Abre <http://127.0.0.1:8000/>. Para detener el servidor, presiona `Ctrl+C` en la terminal. Si es la primera ejecución, sigue primero los pasos de instalación y migración de la sección [Iniciar el sistema en Windows](#iniciar-el-sistema-en-windows).
+El menú permite agregar productos, mostrar el inventario, buscar por nombre y salir. Cada producto tiene nombre, cantidad en stock y precio.
 
 ## Estado del sistema
 
-- **Frontend:** interfaz servida con plantillas Django y construida con HTML, CSS y JavaScript. Incluye listado y detalle de productos, formularios, categorías, búsqueda, filtros por categoría y existencias, y paginación. Los datos se muestran desde la base de datos; el JavaScript solo aplica los filtros y confirma las eliminaciones.
-- **Tailwind CSS:** instalado como herramienta de desarrollo (v4) con compilación local a los estáticos de Django. Queda listo para adoptar sus utilidades gradualmente; los estilos actuales siguen en uso.
-- **Backend:** proyecto Django 6.1 y aplicación `productos` con CRUD completo de productos y categorías mediante el ORM, formularios con validaciones (nombre obligatorio, precio mayor que cero, cantidad no negativa, nombre de categoría único), mensajes de confirmación y administración en `/admin/`.
-- **Base de datos:** SQLite configurada para desarrollo (`magnus_sis/db.sqlite3`, excluida del control de versiones). Los datos que se crean en la interfaz aparecen también en el panel `/admin/`.
-- **Pruebas:** el repositorio incluye pruebas automáticas del CRUD, la búsqueda, los filtros y las validaciones (`python manage.py test`).
+- **MVP de la entrega 2:** `backend_consola/inventario.py`, con inventario en RAM, menú interactivo, agregar/listar/buscar y salida.
+- **Prototipo web adicional:** `magnus_sis/` contiene una interfaz Django con CRUD de productos y categorías sobre SQLite local. Este prototipo no equivale a una base de datos central del equipo ni cambia el alcance sin persistencia de la entrega 2.
+- **Interfaz web:** plantillas Django, HTML, CSS y JavaScript; incluye listado, detalle, búsqueda, filtros y paginación.
+- **Tailwind CSS:** instalado (v4) y compilado a los estáticos de Django; el diseño web actual continúa usando principalmente su CSS existente.
+- **Pruebas del prototipo web:** hay pruebas automáticas de las rutas, formularios, CRUD y filtros en `magnus_sis/productos/tests.py`.
 - **Mockups y documentos:** los mockups se conservan en `mockups/` como material de referencia. La planeación y los entregables están organizados en `docs/planeacion/`.
+
+## Organización y límites actuales
+
+La estructura separa el MVP de consola, el prototipo web, los documentos del curso y los recursos visuales. La app Django `productos` agrupa modelos, formularios, vistas, rutas, migraciones, plantillas, estáticos y pruebas.
+
+El MVP de consola se ajusta al alcance temporal de esta entrega y no persiste información. El prototipo web Django es trabajo adicional: utiliza una base SQLite local por computadora, excluida de Git; no hay una base de datos compartida/configurada para todo el equipo.
+
+El prototipo web está preparado para desarrollo local, no para despliegue: sus vistas CRUD no requieren iniciar sesión, `DEBUG` está activado y `SECRET_KEY` está configurada en `settings.py`. Las validaciones de precio y nombre de categoría se aplican en los formularios web, pero todavía no son restricciones globales del modelo/base de datos. Estos puntos deben revisarse si el equipo decide avanzar el prototipo web en una fase posterior.
 
 ## Tecnologías
 
-- Interfaz: HTML5, CSS3 y JavaScript; Tailwind CSS 4 está instalado como framework de utilidades, sin framework JavaScript de frontend.
-- Servidor y backend: Python y Django, con arquitectura MVT, Django Forms y ORM.
-- Base de datos local: SQLite. La conexión con MySQL queda para una etapa posterior.
+- MVP de consola: Python y estructuras de datos en memoria; no requiere paquetes externos.
+- Prototipo web adicional: HTML5, CSS3, JavaScript, Tailwind CSS 4, Python y Django con arquitectura MVT, Django Forms y ORM.
+- SQLite solo está configurada para el prototipo Django local. La base de datos compartida del equipo pertenece a una fase posterior.
 
 ## Requisitos
 
 - Windows y PowerShell.
 - Python instalado.
-- Node.js y npm, para compilar Tailwind CSS.
-- Dependencias del proyecto instaladas desde `requirements.txt`.
+- Para el MVP de consola: solo Python; no hay dependencias externas.
+- Para el prototipo web: dependencias de `requirements.txt`; Node.js y npm para compilar Tailwind CSS.
 
-## Iniciar el sistema en Windows
+## Prototipo web Django adicional
 
-Abre PowerShell y entra en la carpeta raíz del proyecto. Ajusta la ruta si guardaste el proyecto en otra ubicación:
+El MVP de consola es el ejecutable que corresponde a la entrega 2. Esta sección sirve para ejecutar el prototipo web Django que existe aparte. Abre PowerShell en la raíz del proyecto.
 
-```powershell
-cd C:\Users\Julian\Documents\CRUD_MagnusSIS
-```
-
-### Primera ejecución o instalación de dependencias
+### Primera ejecución o instalación de dependencias web
 
 Si aún no existe el entorno virtual, créalo. Después instala las dependencias:
 
@@ -65,15 +70,15 @@ npm install
 npm run css:build
 ```
 
-### Crear o actualizar las tablas
+### Base local del prototipo web
 
-Ejecuta las migraciones desde la raíz del repositorio. Esto crea el archivo `db.sqlite3` la primera vez:
+Solo para ejecutar el prototipo web, aplica sus migraciones. Esto crea `magnus_sis/db.sqlite3` localmente; no configura una base de datos compartida ni es parte del MVP de consola:
 
 ```powershell
 .\venv\Scripts\python.exe .\magnus_sis\manage.py migrate
 ```
 
-### Arrancar el servidor
+### Arrancar el prototipo web
 
 ```powershell
 .\venv\Scripts\python.exe .\magnus_sis\manage.py runserver
@@ -137,13 +142,23 @@ Escribe el nombre de usuario, el correo (opcional) y la contraseña. La contrase
 
 ```text
 CRUD_MagnusSIS/
+├── .agents/skills/ui-ux-pro-max/ # Guía local para diseño de interfaz
 ├── assets/branding/             # Recursos de marca
-├── docs/planeacion/             # Entregas, revisión y scripts de documentación
+├── backend_consola/
+│   └── inventario.py            # MVP de entrega 2, solo memoria RAM
+├── docs/planeacion/
+│   ├── entrega_0/                # Planeación inicial
+│   ├── entrega_1/                # Documento de sistema de fase 1
+│   ├── entrega_2/                # Instrucciones y documentos de la siguiente entrega
+│   ├── revision/                 # PDF y capturas de revisión documental
+│   └── scripts/                  # Generación y revisión de documentos
 ├── frontend/tailwind.css        # Entrada de estilos Tailwind
 ├── magnus_sis/
-│   ├── manage.py                # Comandos de Django
+│   ├── manage.py                # Punto de entrada de comandos Django
 │   ├── magnus_sis/              # Configuración y rutas del proyecto
 │   └── productos/
+│       ├── migrations/          # Historial del esquema de datos
+│       ├── admin.py              # Registro de modelos en Django Admin
 │       ├── models.py            # Categoria y Producto
 │       ├── forms.py             # Formularios y validaciones
 │       ├── views.py             # Vistas del CRUD
@@ -153,8 +168,9 @@ CRUD_MagnusSIS/
 │       └── static/productos/    # CSS, JavaScript y CSS compilado de Tailwind
 ├── mockups/                     # Mockups conservados como referencia
 ├── package.json                 # Dependencias y comandos de Tailwind
+├── package-lock.json            # Versiones fijadas de dependencias npm
 ├── requirements.txt             # Dependencias Python
 └── README.md
 ```
 
-Los entornos virtuales (`venv/` o `.venv/`), la base de datos SQLite local y los archivos compilados de Python se excluyen del control de versiones.
+Los entornos virtuales (`venv/` o `.venv/`), `node_modules/`, la base SQLite local y los archivos compilados de Python se excluyen del control de versiones.
