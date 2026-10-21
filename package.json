@@ -8,8 +8,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "css:build": "tailwindcss -i ./frontend/tailwind.css -o ./magnus_sis/productos/static/productos/tailwind.generated.css --minify",
-    "css:watch": "tailwindcss -i ./frontend/tailwind.css -o ./magnus_sis/productos/static/productos/tailwind.generated.css --watch --poll=1000"
+    "css:build": "tailwindcss -i ./magnus_sis/frontend/tailwind.css -o ./magnus_sis/productos/static/productos/tailwind.generated.css --minify",
+    "css:watch": "tailwindcss -i ./magnus_sis/frontend/tailwind.css -o ./magnus_sis/productos/static/productos/tailwind.generated.css --watch --poll=1000"
   },
   "repository": {
     "type": "git",

@@ -25,7 +25,7 @@ El menú permite agregar productos, mostrar el inventario, buscar por nombre y s
 
 ## Organización y límites actuales
 
-La estructura separa el MVP de consola, el prototipo web, los documentos del curso y los recursos visuales. La app Django `productos` agrupa modelos, formularios, vistas, rutas, migraciones, plantillas, estáticos y pruebas.
+La estructura separa el MVP de consola, el prototipo web y los documentos del curso. Dentro de `magnus_sis/`, `manage.py` inicia Django, `productos/` contiene la aplicación de inventario y `magnus_sis/` (la carpeta interior) contiene la configuración del proyecto Django. `frontend/` guarda la entrada de Tailwind que compila a los estáticos de `productos/`.
 
 El MVP de consola se ajusta al alcance temporal de esta entrega y no persiste información. El prototipo web Django es trabajo adicional: utiliza una base SQLite local por computadora, excluida de Git; no hay una base de datos compartida/configurada para todo el equipo.
 
@@ -143,7 +143,6 @@ Escribe el nombre de usuario, el correo (opcional) y la contraseña. La contrase
 ```text
 CRUD_MagnusSIS/
 ├── .agents/skills/ui-ux-pro-max/ # Guía local para diseño de interfaz
-├── assets/branding/             # Recursos de marca
 ├── backend_consola/
 │   └── inventario.py            # MVP de entrega 2, solo memoria RAM
 ├── docs/planeacion/
@@ -152,8 +151,8 @@ CRUD_MagnusSIS/
 │   ├── entrega_2/                # Instrucciones y documentos de la siguiente entrega
 │   ├── revision/                 # PDF y capturas de revisión documental
 │   └── scripts/                  # Generación y revisión de documentos
-├── frontend/tailwind.css        # Entrada de estilos Tailwind
 ├── magnus_sis/
+│   ├── frontend/tailwind.css    # Entrada de Tailwind para el prototipo web
 │   ├── manage.py                # Punto de entrada de comandos Django
 │   ├── magnus_sis/              # Configuración y rutas del proyecto
 │   └── productos/
@@ -165,6 +164,7 @@ CRUD_MagnusSIS/
 │       ├── urls.py              # Rutas de la app
 │       ├── tests.py             # Pruebas automáticas
 │       ├── templates/productos/ # Plantillas de la interfaz
+│       ├── static/branding/     # Logos SVG
 │       └── static/productos/    # CSS, JavaScript y CSS compilado de Tailwind
 ├── mockups/                     # Mockups conservados como referencia
 ├── package.json                 # Dependencias y comandos de Tailwind
