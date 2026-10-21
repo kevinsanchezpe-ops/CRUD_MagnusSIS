@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b3f91">
+  <meta name="theme-color" content="#292d83">
   <title>{% block title %}Inventario · Magnus SIS{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'productos/tailwind.generated.css' %}">
   <link rel="stylesheet" href="{% static 'productos/mockups-inventario.css' %}">
@@ -24,8 +24,8 @@
   <div class="app">
     <aside class="sidebar" aria-label="Barra lateral">
       <a class="side-brand" href="{% url 'productos:lista' %}">
-        <img src="{% static 'branding/logo.png' %}" alt="">
-        <span><b>Magnus SIS</b><small>INVENTARIO</small></span>
+        <img class="brand-logo-full" src="{% static 'branding/logo.svg' %}" alt="Magnus SIG — Asesoría e Ingeniería en Sistemas Integrados de Gestión">
+        <img class="brand-logo-mark" src="{% static 'branding/logo-marca.svg' %}" alt="Magnus SIG">
       </a>
       <nav class="primary-nav" aria-label="Navegación principal">
         <a class="nav-item {% if request.path == '/' %}active{% endif %}" href="{% url 'productos:lista' %}" {% if request.path == '/' %}aria-current="page"{% endif %}><span class="nav-text">Productos</span></a>

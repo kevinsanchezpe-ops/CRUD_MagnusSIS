@@ -1,4 +1,4 @@
-:root{--navy:#0b3f91;--blue:#1684f8;--ink:#172b4d;--muted:#73819a;--line:#e5eaf2;--canvas:#f3f6fb;--white:#fff;--green:#16845b;--amber:#a8690a;--red:#bf3d43;--shadow:0 12px 32px #19365d0d}
+:root{--navy:#292d83;--blue:#2aa5d2;--purple:#7775b9;--orange:#ed922e;--ink:#222a50;--muted:#73819a;--line:#e5eaf2;--canvas:#f5f6fb;--white:#fff;--green:#16845b;--amber:#a8690a;--red:#bf3d43;--shadow:0 12px 32px #292d8312}
     *{box-sizing:border-box}body{margin:0;background:#eaf0f8;color:var(--ink);font:14px/1.45 Inter,"Segoe UI",Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}
     .board{max-width:1600px;margin:0 auto;padding:36px 44px 64px}.board-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}.brand{display:flex;gap:14px;align-items:center}.brand img{width:142px;height:88px;object-fit:contain;background:white;border-radius:12px}.brand-copy strong{display:block;font-size:20px}.brand-copy span,.eyebrow{color:var(--muted);font-size:12px}.board-head .tag{padding:8px 12px;border:1px solid #dbe4f0;border-radius:999px;color:#526782;background:#f8faff;font-size:12px}
     .screens{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start}.screen{background:var(--white);border:1px solid #dfe6ef;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);min-height:650px}.screen.wide{grid-column:1/-1;min-height:0}.screen-label{display:flex;justify-content:space-between;align-items:center;padding:13px 19px;background:#f9fbfe;border-bottom:1px solid var(--line);color:#60728c;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.screen-label span:last-child{font-weight:500;letter-spacing:0;text-transform:none}.app{min-height:610px;display:flex;background:#f7f9fc}.wide .app{min-height:620px}
@@ -16,7 +16,22 @@ body.app-page{min-height:100vh;background:#f7f9fc;color:var(--ink)}
 .app-page .app{min-height:100vh;background:#f7f9fc}
 .app-page .sidebar{position:sticky;top:0;height:100vh;min-height:610px}
 .app-page .side-brand{text-decoration:none}
-.app-page .side-brand img{border-radius:8px}
+.app-page .side-brand{display:flex;justify-content:center;align-items:center;padding:2px 0 28px}
+.app-page .side-brand img{display:block;width:190px;height:auto;object-fit:contain}
+.app-page .side-brand .brand-logo-mark{display:none}
+.app-page .nav-item:hover:not(.active){background:#f2f1fa;color:var(--navy)}
+.app-page .nav-item.active{background:#efeffa;color:var(--navy);box-shadow:inset 3px 0 var(--orange)}
+.app-page .primary,.app-page .search-submit{background:var(--navy)}
+.app-page .primary:hover,.app-page .search-submit:hover{background:#22256e}
+.app-page .category-count,.app-page .system-status{border-color:#d9d8f0;background:#f6f5fc}
+.app-page .category-count{color:var(--navy)}
+.app-page .category-card .cat-icon,.app-page .empty-icon{background:#eaf7fb;color:#16789b}
+.app-page :is(input,select,textarea):focus{border-color:var(--blue);box-shadow:0 0 0 3px #2aa5d226}
+.app-page :is(a,button,input,select,textarea,[tabindex]):focus-visible{outline-color:var(--blue)}
+.app-page .table-action{color:#16789b}
+.app-page .table-action:hover{color:var(--navy)}
+.app-page .btn.secondary:hover,.app-page .subtle:hover{border-color:var(--purple);color:var(--navy)}
+.app-page .heading h1,.app-page .form-help h2{color:var(--navy)}
 .system-caption{margin-top:14px}
 .app-page .topbar{position:sticky;top:0;z-index:2}
 .system-status{display:flex;align-items:center;gap:8px;margin-right:auto}
@@ -134,6 +149,8 @@ body.app-page{min-height:100vh;background:#f7f9fc;color:var(--ink)}
   .app-page .sidebar{position:sticky;z-index:4;top:0;width:100%;height:auto;min-height:0;padding:10px 14px;background:#fff;border-right:0;border-bottom:1px solid var(--line);display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px}
   .app-page .side-brand{flex:1 0 100%;padding:0 2px 6px;justify-content:flex-start;gap:10px}
   .app-page .side-brand img{width:34px;height:34px}
+  .app-page .side-brand .brand-logo-full{display:none}
+  .app-page .side-brand .brand-logo-mark{display:block;width:38px;height:38px}
   .app-page .side-brand b{font-size:15px}
   .app-page .side-brand small{font-size:11px}
   .app-page .primary-nav{display:flex;flex:1 0 100%;flex-wrap:wrap;gap:6px}
